@@ -1,12 +1,7 @@
 package com.bridgelabz;
 import java.util.ArrayList;
 import java.util.Objects;
-//Ability to find frequency of words in a large
-//paragraph phrase “Paranoids are not
-//paranoid because they are paranoid but
-//because they keep putting themselves
-//deliberately into paranoid avoidable
-//situations”
+//Remove avoidable word from the phrase “Paranoids are not paranoid because they are paranoid but because they keep putting themselves deliberately into paranoid avoidable situations
 class HashNode<K, V> {
     K key;
     V value;
@@ -60,8 +55,7 @@ public class Map<K,V> {
         {
             bucketList.set(index, newNode);
             size++;
-            if(size >= numBuckets)
-                expandList();
+
             return;
         }
         HashNode tempNode = head;
@@ -77,16 +71,44 @@ public class Map<K,V> {
         newNode.next = head;
         bucketList.set(index, newNode);
         size++;
-        if(size >= numBuckets)
-            expandList();
     }
-    public void expandList()
+    public void remove(K key)
     {
-        for(int i=0;i<10;i++)
+        int index = getBucketIndex(key);
+        HashNode temp = bucketList.get(index);
+
+        if(temp == null)
         {
-            bucketList.add(null);
+            System.out.println("Key " + key +" not present!");
+            return;
         }
-        this.numBuckets = 20;
+
+        if(temp.key.equals(key) && temp.next == null)
+        {
+            bucketList.set(index, null);
+            return;
+        }
+
+        HashNode slast = temp;
+        HashNode last = temp.next;
+
+        while(slast.next != null)
+        {
+            if(temp.key.equals(key))
+            {
+                bucketList.set(index, last);
+                return;
+            }
+
+            if(last.key.equals(key))
+            {
+                slast.next = last.next;
+                return;
+            }
+            slast = slast.next;
+            last = last.next;
+        }
+        System.out.println("Key " + key +" not present!");
     }
     public void display()
     {
@@ -114,5 +136,8 @@ public class Map<K,V> {
         }
         System.out.println("Frequency of words: ");
         map.display();
+           System.out.println("Removing word: avoidable");
+           map.remove("avoidable");
+           map.display();
         }
         }
